@@ -1,0 +1,4 @@
+# Ignore ide plugins
+.idea
+.vscode
+.DS_Store
