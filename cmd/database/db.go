@@ -6,7 +6,8 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"publisher/pkg/database"
+	"publisher/internal/database"
+	dbsvc "publisher/pkg/database"
 	"publisher/pkg/database/endpoints"
 	"publisher/pkg/database/transport"
 	"syscall"
@@ -32,7 +33,7 @@ var (
 
 func main() {
 	var (
-		service     = database.NewService()
+		service     = dbsvc.NewService()
 		endpointSet = endpoints.NewEndpointSet(service)
 		httpHandler = transport.NewHTTPHandler(endpointSet)
 		grpcServer  = transport.NewGRPCServer(endpointSet)
@@ -91,6 +92,19 @@ func main() {
 func init() {
 	logger = log.NewLogfmtLogger(log.NewSyncWriter(os.Stderr))
 	logger = log.With(logger, "ts", log.DefaultTimestampUTC)
+
+	// try connect postgreSQL database
+	db, err := database.Init(database.DefaultDatabase, database.DefaultHost, database.DefaultPort, database.DefaultDBUser, database.DefaultPassword, database.DefaultTimeZone)
+	defer func() {
+		sqlDB, err := db.DB()
+		err = sqlDB.Close()
+		if err != nil {
+			logger.Log("ERROR::Failed to close the database connection", err.Error())
+		}
+	}()
+	if err != nil {
+		logger.Log(fmt.Sprintf("FATAL: failed to load db with error: %s", err.Error()))
+	}
 }
 
 func envString(env, fallback string) string {
