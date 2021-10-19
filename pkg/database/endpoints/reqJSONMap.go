@@ -1,6 +1,6 @@
 package endpoints
 
-import "go-kit-example/internal"
+import "publisher/internal"
 
 type AddRequest struct {
 	Document *internal.Document `json:"document"`

@@ -2,16 +2,16 @@ package main
 
 import (
 	"fmt"
-	"go-kit-example/pkg/watermark"
-	"go-kit-example/pkg/watermark/endpoints"
-	"go-kit-example/pkg/watermark/transport"
 	"net"
 	"net/http"
 	"os"
 	"os/signal"
+	"publisher/pkg/watermark"
+	"publisher/pkg/watermark/endpoints"
+	"publisher/pkg/watermark/transport"
 	"syscall"
 
-	pb "go-kit-example/api/v1/pb/watermark"
+	pb "publisher/api/v1/pb/watermark"
 
 	kitgrpc "github.com/go-kit/kit/transport/grpc"
 	"github.com/go-kit/log"

@@ -3,10 +3,10 @@ package endpoints
 import (
 	"context"
 	"errors"
-	"go-kit-example/internal"
-	"go-kit-example/pkg/database"
 	"net/http"
 	"os"
+	"publisher/internal"
+	"publisher/pkg/database"
 
 	"github.com/go-kit/kit/endpoint"
 	"github.com/go-kit/log"

@@ -2,8 +2,11 @@ package database
 
 import (
 	"context"
-	"go-kit-example/internal"
 	"net/http"
+	"os"
+	"publisher/internal"
+
+	"github.com/go-kit/log"
 )
 
 type dbService struct{}
@@ -31,5 +34,13 @@ func (d *dbService) Remove(_ context.Context, ticketID string) (int, error) {
 }
 
 func (d *dbService) ServiceStatus(_ context.Context) (int, error) {
+	logger.Log("Checking the Service health...")
 	return http.StatusOK, nil
+}
+
+var logger log.Logger
+
+func init() {
+	logger = log.NewLogfmtLogger(log.NewSyncWriter(os.Stderr))
+	logger = log.With(logger, "ts", log.DefaultTimestampUTC)
 }

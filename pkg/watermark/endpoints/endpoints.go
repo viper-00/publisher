@@ -3,9 +3,9 @@ package endpoints
 import (
 	"context"
 	"errors"
-	"go-kit-example/internal"
-	"go-kit-example/pkg/watermark"
 	"os"
+	"publisher/internal"
+	"publisher/pkg/watermark"
 
 	"github.com/go-kit/kit/endpoint"
 	"github.com/go-kit/log"

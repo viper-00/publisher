@@ -1,6 +1,6 @@
 package endpoints
 
-import "go-kit-example/internal"
+import "publisher/internal"
 
 type GetRequest struct {
 	Filters []internal.Filter `json:"filters,omitempty"`

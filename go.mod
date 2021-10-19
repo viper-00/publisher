@@ -1,4 +1,4 @@
-module go-kit-example
+module publisher
 
 go 1.17
 

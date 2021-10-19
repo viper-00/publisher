@@ -2,10 +2,10 @@ package transport
 
 import (
 	"context"
-	"go-kit-example/internal"
-	"go-kit-example/pkg/watermark/endpoints"
+	"publisher/internal"
+	"publisher/pkg/watermark/endpoints"
 
-	"go-kit-example/api/v1/pb/watermark"
+	"publisher/api/v1/pb/watermark"
 
 	grpctransport "github.com/go-kit/kit/transport/grpc"
 )
@@ -16,7 +16,7 @@ type grpcServer struct {
 	addDocument   grpctransport.Handler
 	watermark     grpctransport.Handler
 	serviceStatus grpctransport.Handler
-	// Embed the unimplemented server
+	// forward compatible implementations.
 	watermark.UnimplementedWatermarkServer
 }
 

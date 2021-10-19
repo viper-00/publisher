@@ -2,7 +2,7 @@ package database
 
 import (
 	"context"
-	"go-kit-example/internal"
+	"publisher/internal"
 )
 
 type Service interface {

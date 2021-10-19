@@ -3,10 +3,10 @@ package transport
 import (
 	"context"
 	"encoding/json"
-	"go-kit-example/internal/util"
-	"go-kit-example/pkg/watermark/endpoints"
 	"net/http"
 	"os"
+	"publisher/internal/util"
+	"publisher/pkg/watermark/endpoints"
 
 	httptransport "github.com/go-kit/kit/transport/http"
 	"github.com/go-kit/log"

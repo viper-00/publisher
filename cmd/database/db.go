@@ -2,17 +2,21 @@ package main
 
 import (
 	"fmt"
-	"go-kit-example/pkg/database"
-	"go-kit-example/pkg/database/endpoints"
-	"go-kit-example/pkg/database/transport"
 	"net"
 	"net/http"
 	"os"
 	"os/signal"
+	"publisher/pkg/database"
+	"publisher/pkg/database/endpoints"
+	"publisher/pkg/database/transport"
 	"syscall"
 
+	pb "publisher/api/v1/pb/db"
+
+	kitgrpc "github.com/go-kit/kit/transport/grpc"
 	"github.com/go-kit/log"
 	"github.com/oklog/run"
+	"google.golang.org/grpc"
 )
 
 const (
@@ -31,11 +35,12 @@ func main() {
 		service     = database.NewService()
 		endpointSet = endpoints.NewEndpointSet(service)
 		httpHandler = transport.NewHTTPHandler(endpointSet)
+		grpcServer  = transport.NewGRPCServer(endpointSet)
 	)
 
 	var g run.Group
 	{
-		// Http Listener by Go Kit Http Handler
+		// HTTP Listener by Go Kit Http Handler
 		httpListener, err := net.Listen("tcp", httpAddr)
 		if err != nil {
 			logger.Log("transport", "HTTP", "during", "Listen", "err", err)
@@ -46,6 +51,22 @@ func main() {
 			return http.Serve(httpListener, httpHandler)
 		}, func(error) {
 			httpListener.Close()
+		})
+	}
+	{
+		// GRPC Listener by Go Kit gRPC Server
+		grpcListener, err := net.Listen("tcp", grpcAddr)
+		if err != nil {
+			logger.Log("transport", "gRPC", "during", "Listen", "err", err)
+			os.Exit(1)
+		}
+		g.Add(func() error {
+			logger.Log("transport", "gRPC", "addr", grpcAddr)
+			baseServer := grpc.NewServer(grpc.UnaryInterceptor(kitgrpc.Interceptor))
+			pb.RegisterDatabaseServer(baseServer, grpcServer)
+			return baseServer.Serve(grpcListener)
+		}, func(error) {
+			grpcListener.Close()
 		})
 	}
 	{

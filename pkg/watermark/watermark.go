@@ -2,9 +2,9 @@ package watermark
 
 import (
 	"context"
-	"go-kit-example/internal"
 	"net/http"
 	"os"
+	"publisher/internal"
 
 	"github.com/go-kit/log"
 	"github.com/google/uuid"

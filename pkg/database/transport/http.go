@@ -3,10 +3,10 @@ package transport
 import (
 	"context"
 	"encoding/json"
-	"go-kit-example/internal/util"
-	"go-kit-example/pkg/database/endpoints"
 	"net/http"
 	"os"
+	"publisher/internal/util"
+	"publisher/pkg/database/endpoints"
 
 	httptransport "github.com/go-kit/kit/transport/http"
 	"github.com/go-kit/log"
@@ -21,11 +21,75 @@ func NewHTTPHandler(ep endpoints.Set) http.Handler {
 		encodeResponse,
 	))
 
+	m.Handle("/add", httptransport.NewServer(
+		ep.AddEndpoint,
+		decodeHTTPAddRequest,
+		encodeResponse,
+	))
+
+	m.Handle("/get", httptransport.NewServer(
+		ep.GetEndpoint,
+		decodeHTTPGetRequest,
+		encodeResponse,
+	))
+
+	m.Handle("/update", httptransport.NewServer(
+		ep.UpdateEndpoint,
+		decodeHTTPUploadRequest,
+		encodeResponse,
+	))
+
+	m.Handle("/remove", httptransport.NewServer(
+		ep.RemoveEndpoint,
+		decodeHTTPRemoveRequest,
+		encodeResponse,
+	))
+
 	return m
 }
 
 func decodeHTTPServiceStatusRequest(_ context.Context, _ *http.Request) (interface{}, error) {
 	var req endpoints.ServiceStatusRequest
+	return req, nil
+}
+
+func decodeHTTPAddRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	var req endpoints.AddRequest
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+func decodeHTTPGetRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	var req endpoints.GetRequest
+	if r.ContentLength == 0 {
+		logger.Log("Get request with no body")
+		return req, nil
+	}
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+func decodeHTTPUploadRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	var req endpoints.UpdateRequest
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+func decodeHTTPRemoveRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	var req endpoints.RemoveRequest
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		return nil, err
+	}
 	return req, nil
 }
 
