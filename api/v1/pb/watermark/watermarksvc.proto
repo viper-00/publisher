@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "go-kit-example/api/v1/pb/watermark";
+option go_package = "publisher/api/v1/pb/watermark";
 
 package pb;
 

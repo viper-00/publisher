@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+option go_package = "publisher/api/v1/pb/auth";
+
+package auth;
+
+service authorization {
+    rpc Login(LoginRequest) returns (LoginReply) {}
+    rpc Logout(LogoutRequest) returns (LogoutReply) {}
+    rpc ServiceStatus (ServiceStatusRequest) returns (ServiceStatusReply) {}
+}
+
+message LoginRequest {
+    string account = 1;
+    string password = 2;
+}
+
+message LoginReply {
+    string token = 1;
+    string err = 2;
+}
+
+message LogoutRequest {
+    string account = 1;
+    string token = 2;
+}
+
+message LogoutReply {
+    int64 code = 1;
+    string err = 2;
+}
+
+message ServiceStatusRequest {}
+
+message ServiceStatusReply {
+    int64 code = 1;
+    string err = 2;
+}

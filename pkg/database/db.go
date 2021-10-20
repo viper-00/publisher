@@ -15,7 +15,7 @@ func NewService() Service {
 	return &dbService{}
 }
 
-// implement interface;
+// implement service interface;
 
 func (d *dbService) Add(_ context.Context, doc *internal.Document) (string, error) {
 	return "", nil
